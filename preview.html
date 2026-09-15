@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사회 시험 암기 - 구글의 기업가 정신</title>
+<style>
+  :root{
+    --bg:#f4f7fb;
+    --card:#ffffff;
+    --text:#18212f;
+    --muted:#667085;
+    --line:#e4e7ec;
+    --blue:#2563eb;
+    --blue2:#eff6ff;
+    --green:#15803d;
+    --green2:#f0fdf4;
+    --amber:#b45309;
+    --amber2:#fffbeb;
+    --red:#b42318;
+    --shadow:0 8px 28px rgba(16,24,40,.08);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:"Pretendard","Noto Sans KR","Apple SD Gothic Neo",Arial,sans-serif;
+    background:linear-gradient(180deg,#edf4ff 0,#f7f9fc 260px,#f4f7fb 100%);
+    color:var(--text);
+    line-height:1.75;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:34px 18px 70px}
+  .hero{
+    background:linear-gradient(135deg,#1d4ed8,#4f46e5);
+    color:#fff;border-radius:24px;padding:30px 32px;
+    box-shadow:var(--shadow);margin-bottom:20px
+  }
+  .hero h1{margin:0 0 8px;font-size:clamp(26px,4vw,38px);line-height:1.25}
+  .hero p{margin:0;opacity:.9}
+  .tabs{
+    display:flex;flex-wrap:wrap;gap:9px;margin:18px 0 22px;
+    position:sticky;top:8px;z-index:20;
+    padding:10px;background:rgba(244,247,251,.92);
+    backdrop-filter:blur(10px);border-radius:16px
+  }
+  .tab{
+    border:1px solid #cfd8e6;background:white;color:#344054;
+    padding:10px 15px;border-radius:12px;font-weight:800;cursor:pointer
+  }
+  .tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .panel{display:none}.panel.active{display:block}
+  .card{
+    background:var(--card);border:1px solid var(--line);
+    border-radius:20px;padding:24px;margin:16px 0;box-shadow:var(--shadow)
+  }
+  h2{font-size:22px;margin:0 0 14px;line-height:1.45}
+  h3{font-size:18px;margin:4px 0 12px}
+  .question{
+    font-weight:900;color:#1d2939;background:#f8fafc;border-left:5px solid var(--blue);
+    border-radius:10px;padding:14px 16px;margin-bottom:18px
+  }
+  .answer{font-size:17px}
+  .answer p{margin:0 0 14px}
+  .key{
+    background:#fff3a3;padding:1px 4px;border-radius:5px;font-weight:800
+  }
+  .key-blue{color:#1d4ed8;font-weight:900}
+  .summary{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px
+  }
+  .chipbox{
+    border:1px solid var(--line);border-radius:14px;padding:15px;background:#fafcff
+  }
+  .chipbox b{display:block;color:var(--blue);margin-bottom:5px}
+  .memory-line{
+    border:1px solid #dbe3ef;border-radius:15px;padding:15px 16px;margin:10px 0;
+    background:#fff;cursor:pointer;transition:.15s
+  }
+  .memory-line:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(16,24,40,.06)}
+  .memory-line.hidden-text{color:transparent;text-shadow:0 0 9px rgba(24,33,47,.45);user-select:none}
+  .memory-line .num{color:var(--blue);font-weight:900;margin-right:8px}
+  .controls{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+  button.action{
+    border:0;border-radius:10px;padding:9px 13px;cursor:pointer;font-weight:800;
+    background:#eef2ff;color:#3730a3
+  }
+  button.action.primary{background:var(--blue);color:#fff}
+  button.action.green{background:#dcfce7;color:#166534}
+  button.action.amber{background:#fef3c7;color:#92400e}
+  .cloze{
+    font-size:17px;background:#fcfdff;border:1px solid var(--line);
+    border-radius:15px;padding:16px;margin:12px 0
+  }
+  input.blank{
+    min-width:110px;max-width:180px;border:0;border-bottom:2px solid #98a2b3;
+    padding:3px 6px;font-size:16px;text-align:center;background:#fff
+  }
+  input.blank.correct{border-bottom-color:#16a34a;background:#f0fdf4}
+  input.blank.wrong{border-bottom-color:#dc2626;background:#fef2f2}
+  .result{font-weight:900;margin-top:10px}
+  textarea{
+    width:100%;min-height:190px;padding:14px;border:1px solid #cfd8e6;
+    border-radius:14px;resize:vertical;font:inherit;line-height:1.65
+  }
+  .scorebox{
+    display:none;margin-top:14px;padding:14px 16px;border-radius:14px;background:var(--green2);
+    border:1px solid #bbf7d0
+  }
+  .model{
+    display:none;margin-top:14px;padding:18px;border-radius:15px;background:#f8fafc;border:1px solid var(--line)
+  }
+  .mini{
+    color:var(--muted);font-size:14px
+  }
+  .flow{
+    display:flex;flex-wrap:wrap;align-items:center;gap:7px;font-weight:850
+  }
+  .flow span{
+    background:var(--blue2);color:#1d4ed8;padding:7px 10px;border-radius:10px
+  }
+  .flow i{font-style:normal;color:#98a2b3}
+  .danger-note{
+    background:var(--amber2);border:1px solid #fde68a;color:#7c4a03;
+    padding:13px 15px;border-radius:13px;font-size:14px
+  }
+  .footer{color:#7a8597;text-align:center;font-size:13px;margin-top:30px}
+  @media(max-width:600px){
+    .wrap{padding:20px 12px 55px}.hero{padding:24px 20px;border-radius:18px}.card{padding:18px}
+    .tabs{top:0}.tab{flex:1 1 auto;padding:9px 10px}
+  }
+  @media print{
+    .tabs,.controls,.footer{display:none!important}
+    .panel{display:block!important}
+    body{background:white}.card,.hero{box-shadow:none}
+    .hero{background:white;color:black;border:1px solid #ddd}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <h1>사회 시험 암기 훈련</h1>
+    <p>주제: 구글의 생성형 AI 도입과 기업가 정신 · 핵심 내용은 유지하고 표현만 자연스럽게 정리한 버전</p>
+  </section>
+
+  <nav class="tabs">
+    <button class="tab active" data-panel="complete">완성 답안</button>
+    <button class="tab" data-panel="memory">문장 암기</button>
+    <button class="tab" data-panel="blank">빈칸 암기</button>
+    <button class="tab" data-panel="test">시험 모드</button>
+  </nav>
+
+  <section id="complete" class="panel active">
+    <div class="card">
+      <div class="question">1. 조사한 사례가 기업의 역할과 사회적 책임에 부합하는 부분을 찾아 그 의미를 서술하시오.</div>
+      <div class="answer">
+        <p>구글은 원래 <span class="key">인터넷 검색 시장에서 높은 점유율</span>을 바탕으로 성장한 대표적인 기업이었다. 그러나 최근 생성형 AI가 빠르게 확산되면서 사람들은 오픈AI, 앤트로픽 등 다른 기업의 생성형 AI를 활용해 정보를 검색하기 시작하였다. 이러한 환경 변화에 대응하여 구글은 <span class="key">‘제미나이(Gemini)’를 개발하고 이를 구글의 기존 서비스와 결합</span>하여 새로운 수익 기회를 확대하였다.</p>
+        <p>이는 기업의 역할 가운데 하나인 <span class="key">연구개발(R&amp;D) 투자</span>를 적극적으로 실천하고, 시장 변화에 맞춰 새로운 기술을 개발함으로써 전반적인 AI 기술 발전에 기여한 사례라고 볼 수 있다. 또한 사회적 책임의 측면에서는 생성형 AI 시장의 경쟁을 촉진하여 <span class="key">특정 기업에 시장이 지나치게 집중되는 것을 완화</span>하는 효과를 가져왔다. 그 결과 기업 간 기술·서비스 경쟁이 활발해지고 소비자의 선택권도 넓어져, <span class="key">더 건전한 시장 생태계를 조성했다</span>는 점에서 의미가 있다.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="question">2. 기업가 정신이 발휘된 결과 확대된 기업의 권력이 그 사회를 변화시킨 과정 또는 양상을 서술하시오.</div>
+      <div class="answer">
+        <p>구글은 자사의 서비스에 생성형 AI를 도입함으로써 <span class="key">외부 환경의 변화에 유연하고 신속하게 대응하는 혁신적 기업가 정신</span>을 발휘하였다. 그 결과 기존의 검색 시장을 넘어 생성형 AI 시장에도 성공적으로 진출하였으며, 다양한 분야에서 새로운 수익을 창출할 수 있게 되었다.</p>
+        <p>이전에는 구글 생태계 안에 경쟁력 있는 생성형 AI 서비스가 부족하여 일부 이용자들이 다른 회사의 플랫폼으로 이동하기도 하였다. 그러나 제미나이를 검색, 문서, 메일 등 구글 생태계 전반에 결합하면서 이용자들은 하나의 플랫폼 안에서 여러 서비스를 더욱 편리하게 이용할 수 있게 되었고, 이 과정에서 <span class="key">락인(Lock-in) 효과</span>가 강화되었다. 이는 기존 고객의 이탈을 줄이는 동시에 새로운 이용자를 끌어들이는 결과로 이어졌다.</p>
+        <p>나아가 구글은 생성형 AI 기능과 연계된 <span class="key">유료 요금제와 고부가가치 서비스</span>를 확대하였다. 이미 구글 생태계를 익숙하게 사용하는 소비자들이 AI 기능까지 함께 이용하게 되면서 구글의 시장 지배력과 기업 권력은 더욱 커졌다. 이렇게 확대된 구글의 영향력은 ChatGPT 중심으로 주목받던 생성형 AI 시장에 강력한 경쟁 구도를 형성하여, 여러 기업이 치열하게 경쟁하는 이른바 <span class="key">‘AI 춘추전국시대’</span>를 촉진하였다. 이러한 경쟁은 AI 기술의 대중화를 앞당기고 사회 전반의 AI 발전 속도를 높이는 중요한 변화로 작용하였다.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>1분 암기용 핵심 구조</h2>
+      <div class="summary">
+        <div class="chipbox"><b>1번 시작</b>검색 강자 구글 → 생성형 AI 확산으로 환경 변화</div>
+        <div class="chipbox"><b>기업의 역할</b>Gemini 개발 → R&amp;D 투자 → AI 기술 발전</div>
+        <div class="chipbox"><b>사회적 책임</b>경쟁 촉진 → 시장 집중 완화 → 소비자 선택권 확대</div>
+        <div class="chipbox"><b>2번 시작</b>환경 변화에 유연·신속 대응 → 혁신적 기업가 정신</div>
+        <div class="chipbox"><b>기업 권력 확대</b>Gemini 결합 → 락인 효과 → 고객 유지·유입 → 유료 서비스</div>
+        <div class="chipbox"><b>사회 변화</b>강력한 경쟁 구도 → AI 춘추전국시대 → 기술 대중화·발전 가속</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>암기 흐름만 기억하기</h2>
+      <div class="flow">
+        <span>환경 변화</span><i>→</i><span>Gemini 개발</span><i>→</i><span>R&amp;D</span><i>→</i>
+        <span>경쟁 촉진</span><i>→</i><span>선택권 확대</span>
+      </div>
+      <br>
+      <div class="flow">
+        <span>AI 도입</span><i>→</i><span>Lock-in</span><i>→</i><span>수익 확대</span><i>→</i>
+        <span>기업 권력 확대</span><i>→</i><span>AI 경쟁 심화</span><i>→</i><span>사회 전체 발전</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="memory" class="panel">
+    <div class="card">
+      <h2>문장 암기 모드</h2>
+      <p class="mini">문장을 클릭하면 가려지고, 다시 클릭하면 보입니다. 먼저 전체를 읽고 → 한 줄씩 가린 뒤 말해보세요.</p>
+      <div class="controls">
+        <button class="action primary" onclick="hideAll()">전체 가리기</button>
+        <button class="action" onclick="showAll()">전체 보이기</button>
+        <button class="action green" onclick="randomHide()">무작위 50% 가리기</button>
+      </div>
+
+      <h3>1번 답안</h3>
+      <div class="memory-line"><span class="num">①</span>구글은 인터넷 검색 시장에서 높은 점유율을 바탕으로 성장한 대표적인 기업이었다.</div>
+      <div class="memory-line"><span class="num">②</span>그러나 생성형 AI의 확산으로 사람들이 다른 기업의 AI를 이용해 정보를 검색하기 시작하였다.</div>
+      <div class="memory-line"><span class="num">③</span>구글은 이러한 변화에 대응하여 제미나이를 개발하고 기존 서비스와 결합해 새로운 수익 기회를 확대하였다.</div>
+      <div class="memory-line"><span class="num">④</span>이는 연구개발(R&amp;D) 투자를 적극적으로 실천하여 AI 기술 발전에 기여한 사례이다.</div>
+      <div class="memory-line"><span class="num">⑤</span>또한 AI 시장의 경쟁을 촉진하여 특정 기업에 시장이 지나치게 집중되는 것을 완화하였다.</div>
+      <div class="memory-line"><span class="num">⑥</span>그 결과 소비자의 선택권이 넓어지고 더 건전한 시장 생태계가 조성되었다.</div>
+
+      <h3 style="margin-top:24px">2번 답안</h3>
+      <div class="memory-line"><span class="num">①</span>구글은 생성형 AI를 도입하여 외부 환경 변화에 유연하고 신속하게 대응하는 기업가 정신을 발휘하였다.</div>
+      <div class="memory-line"><span class="num">②</span>그 결과 검색 시장을 넘어 생성형 AI 시장에도 진출하고 새로운 수익을 창출하였다.</div>
+      <div class="memory-line"><span class="num">③</span>제미나이를 구글 생태계 전반에 결합하면서 이용 편의성이 높아지고 락인 효과가 강화되었다.</div>
+      <div class="memory-line"><span class="num">④</span>이는 고객 이탈을 줄이고 새로운 이용자를 유입시키는 결과로 이어졌다.</div>
+      <div class="memory-line"><span class="num">⑤</span>유료 요금제와 고부가가치 서비스의 확대는 구글의 시장 지배력과 기업 권력을 더욱 강화하였다.</div>
+      <div class="memory-line"><span class="num">⑥</span>구글의 영향력 확대는 생성형 AI 시장의 경쟁을 심화시켜 ‘AI 춘추전국시대’를 촉진하였다.</div>
+      <div class="memory-line"><span class="num">⑦</span>이러한 경쟁은 AI 기술의 대중화를 앞당기고 사회 전반의 AI 발전을 가속화하였다.</div>
+    </div>
+  </section>
+
+  <section id="blank" class="panel">
+    <div class="card">
+      <h2>빈칸 암기 모드</h2>
+      <p class="mini">핵심어만 정확히 기억하면 서술형 답안을 훨씬 쉽게 복원할 수 있습니다.</p>
+
+      <div class="cloze">① 구글은 시장 변화에 대응하여
+        <input class="blank" data-answer="제미나이" placeholder="정답">를 개발하고 기존 서비스와 결합하였다.
+      </div>
+      <div class="cloze">② 이는 기업의 역할 중
+        <input class="blank" data-answer="연구개발" placeholder="정답">(R&amp;D) 투자를 적극적으로 실천한 사례이다.
+      </div>
+      <div class="cloze">③ 사회적 책임 측면에서는 AI 시장의
+        <input class="blank" data-answer="경쟁" placeholder="정답">을 촉진하여 특정 기업에 시장이 지나치게 집중되는 것을 완화하였다.
+      </div>
+      <div class="cloze">④ 그 결과 소비자의
+        <input class="blank" data-answer="선택권" placeholder="정답">이 넓어지고 건전한 시장 생태계가 조성되었다.
+      </div>
+      <div class="cloze">⑤ 구글 생태계에 제미나이를 결합하면서 이용자가 다른 플랫폼으로 이동하기 어려워지는
+        <input class="blank" data-answer="락인" placeholder="정답"> 효과가 강화되었다.
+      </div>
+      <div class="cloze">⑥ 유료 요금제와 고부가가치 서비스의 확대는 구글의 시장
+        <input class="blank" data-answer="지배력" placeholder="정답">과 기업 권력을 강화하였다.
+      </div>
+      <div class="cloze">⑦ 여러 AI 기업이 치열하게 경쟁하는 상황을 이른바
+        <input class="blank" data-answer="AI 춘추전국시대" placeholder="정답">라고 표현할 수 있다.
+      </div>
+      <div class="cloze">⑧ 이러한 경쟁은 AI 기술의
+        <input class="blank" data-answer="대중화" placeholder="정답">를 앞당기고 사회 전반의 발전을 가속화하였다.
+      </div>
+
+      <div class="controls">
+        <button class="action primary" onclick="checkBlanks()">채점하기</button>
+        <button class="action" onclick="resetBlanks()">다시 풀기</button>
+        <button class="action amber" onclick="fillAnswers()">정답 보기</button>
+      </div>
+      <div id="blankResult" class="result"></div>
+    </div>
+  </section>
+
+  <section id="test" class="panel">
+    <div class="card">
+      <h2>실전 서술형 1번</h2>
+      <div class="question">조사한 사례가 기업의 역할과 사회적 책임에 부합하는 부분을 찾아 그 의미를 서술하시오.</div>
+      <textarea id="essay1" placeholder="답을 직접 써 보세요. 핵심어를 모두 넣는 연습을 해보세요."></textarea>
+      <div class="controls">
+        <button class="action primary" onclick="scoreEssay(1)">핵심어 채점</button>
+        <button class="action amber" onclick="toggleModel(1)">모범답안 보기/숨기기</button>
+      </div>
+      <div id="score1" class="scorebox"></div>
+      <div id="model1" class="model">
+        <b>모범답안</b><br><br>
+        구글은 생성형 AI의 확산이라는 시장 변화에 대응하여 제미나이를 개발하고 기존 서비스와 결합하였다.
+        이는 연구개발(R&amp;D) 투자를 통해 새로운 기술을 개발하고 AI 기술 발전에 기여했다는 점에서 기업의 역할에 부합한다.
+        또한 생성형 AI 시장의 경쟁을 촉진하여 특정 기업에 시장이 지나치게 집중되는 것을 완화하고,
+        소비자의 선택권을 넓혀 건전한 시장 생태계를 조성했다는 점에서 사회적 책임의 의미가 있다.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>실전 서술형 2번</h2>
+      <div class="question">기업가 정신이 발휘된 결과 확대된 기업의 권력이 그 사회를 변화시킨 과정 또는 양상을 서술하시오.</div>
+      <textarea id="essay2" placeholder="과정이 드러나도록 '기업가 정신 → 락인 → 기업 권력 확대 → 사회 변화' 순서로 써 보세요."></textarea>
+      <div class="controls">
+        <button class="action primary" onclick="scoreEssay(2)">핵심어 채점</button>
+        <button class="action amber" onclick="toggleModel(2)">모범답안 보기/숨기기</button>
+      </div>
+      <div id="score2" class="scorebox"></div>
+      <div id="model2" class="model">
+        <b>모범답안</b><br><br>
+        구글은 생성형 AI를 자사 서비스에 도입하여 외부 환경 변화에 유연하고 신속하게 대응하는 혁신적 기업가 정신을 발휘하였다.
+        이후 제미나이를 검색, 문서, 메일 등 구글 생태계에 결합하면서 이용 편의성이 높아지고 락인 효과가 강화되었다.
+        이는 고객 이탈을 줄이고 신규 이용자를 늘렸으며, 유료 요금제와 고부가가치 서비스 확대를 통해 구글의 시장 지배력과 기업 권력을 더욱 키웠다.
+        이렇게 확대된 영향력은 생성형 AI 시장의 경쟁을 심화시켜 ‘AI 춘추전국시대’를 촉진하였고,
+        AI 기술의 대중화와 사회 전반의 기술 발전을 더욱 빠르게 만들었다.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>시험 직전 암기 공식</h2>
+      <div class="danger-note">
+        <b>1번:</b> 제미나이 개발 → R&amp;D → 경쟁 촉진 → 시장 집중 완화 → 소비자 선택권 확대<br>
+        <b>2번:</b> 변화에 신속 대응 → Gemini 생태계 결합 → Lock-in → 수익·시장 지배력 확대 → AI 경쟁 심화 → 기술 대중화
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">사회 서술형 암기용 · 브라우저에서 바로 실행되는 단일 HTML 파일</div>
+</div>
+
+<script>
+  document.querySelectorAll('.tab').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.panel).classList.add('active');
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+  });
+
+  document.querySelectorAll('.memory-line').forEach(el=>{
+    el.addEventListener('click',()=>el.classList.toggle('hidden-text'));
+  });
+
+  function hideAll(){
+    document.querySelectorAll('.memory-line').forEach(el=>el.classList.add('hidden-text'));
+  }
+  function showAll(){
+    document.querySelectorAll('.memory-line').forEach(el=>el.classList.remove('hidden-text'));
+  }
+  function randomHide(){
+    document.querySelectorAll('.memory-line').forEach(el=>{
+      el.classList.toggle('hidden-text', Math.random() < .5);
+    });
+  }
+
+  function normalize(s){
+    return s.trim().toLowerCase().replace(/\s+/g,' ');
+  }
+
+  function checkBlanks(){
+    const inputs=[...document.querySelectorAll('input.blank')];
+    let correct=0;
+    inputs.forEach(inp=>{
+      const a=normalize(inp.dataset.answer);
+      const v=normalize(inp.value);
+      inp.classList.remove('correct','wrong');
+      const ok = v===a ||
+        (a==='연구개발' && ['r&d','연구 개발'].includes(v)) ||
+        (a==='락인' && ['lock-in','lock in','락인 효과'].includes(v)) ||
+        (a==='ai 춘추전국시대' && ['ai춘추전국시대','춘추전국시대'].includes(v));
+      if(ok){inp.classList.add('correct');correct++;}
+      else inp.classList.add('wrong');
+    });
+    document.getElementById('blankResult').textContent =
+      `점수: ${correct} / ${inputs.length}  (${Math.round(correct/inputs.length*100)}점)`;
+  }
+  function resetBlanks(){
+    document.querySelectorAll('input.blank').forEach(inp=>{
+      inp.value='';inp.classList.remove('correct','wrong');
+    });
+    document.getElementById('blankResult').textContent='';
+  }
+  function fillAnswers(){
+    document.querySelectorAll('input.blank').forEach(inp=>{
+      inp.value=inp.dataset.answer;inp.classList.add('correct');inp.classList.remove('wrong');
+    });
+    document.getElementById('blankResult').textContent='정답을 표시했습니다.';
+  }
+
+  const essayKeywords = {
+    1:[
+      ['제미나이','gemini'],
+      ['연구개발','r&d'],
+      ['경쟁'],
+      ['집중','독점','독과점'],
+      ['선택권'],
+      ['시장 생태계','건전한 시장']
+    ],
+    2:[
+      ['유연','신속','환경 변화'],
+      ['제미나이','gemini'],
+      ['락인','lock-in','lock in'],
+      ['유료','요금제','고부가가치'],
+      ['시장 지배력','기업 권력','영향력'],
+      ['ai 춘추전국시대','경쟁'],
+      ['대중화','발전','가속']
+    ]
+  };
+
+  function scoreEssay(n){
+    const text=normalize(document.getElementById('essay'+n).value);
+    const groups=essayKeywords[n];
+    const hits=[];
+    const misses=[];
+    groups.forEach(g=>{
+      if(g.some(k=>text.includes(normalize(k)))) hits.push(g[0]);
+      else misses.push(g[0]);
+    });
+    const score=Math.round(hits.length/groups.length*100);
+    const box=document.getElementById('score'+n);
+    box.style.display='block';
+    box.innerHTML=`<b>핵심어 반영 점수: ${score}점</b><br>
+      포함: ${hits.length?hits.join(', '):'없음'}<br>
+      보완하면 좋은 핵심어: ${misses.length?misses.join(', '):'없음'}<br>
+      <span class="mini">※ 실제 학교 채점 기준이 아니라 암기 확인용입니다.</span>`;
+  }
+
+  function toggleModel(n){
+    const m=document.getElementById('model'+n);
+    m.style.display = m.style.display==='block' ? 'none' : 'block';
+  }
+</script>
+</body>
+</html>
